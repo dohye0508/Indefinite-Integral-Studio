@@ -88,37 +88,77 @@ document.addEventListener('DOMContentLoaded', () => {
         chkStrict.checked = (savedStrict === 'true');
     }
 
-    // Populate Collection Dropdown
-    const selCollection = document.getElementById('sel-collection');
-    if (selCollection && window.generatedCollections) {
-        selCollection.innerHTML = "";
-        window.generatedCollections.forEach(col => {
-            const opt = document.createElement('option');
-            opt.value = col.id;
-            opt.innerText = col.name;
-            selCollection.appendChild(opt);
-        });
+    // Populate Collection Grid
+    const gridContainer = document.getElementById('collection-grid');
+    const hiddenInput = document.getElementById('sel-collection-value');
+
+    if (gridContainer && window.generatedCollections) {
+        gridContainer.innerHTML = "";
         
-        if(window.generatedCollections.length === 0) {
-             const opt = document.createElement('option');
-             opt.innerText = "No collections found";
-             selCollection.appendChild(opt);
+        let firstId = null;
+
+        window.generatedCollections.forEach((col, index) => {
+            if (index === 0) firstId = col.id;
+
+            // Load best score from LocalStorage
+            const historyKey = `history_${col.id}`;
+            const historyData = localStorage.getItem(historyKey);
+            let scoreDisplay = `<span class="collection-score"><i class="empty-star">★</i> Not started</span>`;
+            
+            if (historyData) {
+                try {
+                    const parsed = JSON.parse(historyData);
+                    scoreDisplay = `<span class="collection-score has-score"><i class="full-star">★</i> Best: ${parsed.score}</span>`;
+                } catch(e) { console.error(e); }
+            }
+
+            const card = document.createElement('div');
+            card.className = 'collection-card';
+            card.dataset.id = col.id;
+            card.onclick = () => selectCollection(col.id);
+            
+            card.innerHTML = `
+                <div>
+                    <h3>${col.name}</h3>
+                    ${scoreDisplay}
+                </div>
+            `;
+            gridContainer.appendChild(card);
+        });
+
+        if (window.generatedCollections.length > 0) {
+            selectCollection(firstId);
+        } else {
+             gridContainer.innerHTML = "<p>No collections found</p>";
         }
-    } else if (selCollection) {
-        selCollection.innerHTML = "<option>Error loading collections</option>";
+    } else if (gridContainer) {
+        gridContainer.innerHTML = "<p>Error loading collections</p>";
     }
     
     // Default to strict C Check
     if(chkStrict) chkStrict.checked = true;
 });
 
+function selectCollection(id) {
+    const hiddenInput = document.getElementById('sel-collection-value');
+    if (hiddenInput) hiddenInput.value = id;
+
+    // UI Update
+    document.querySelectorAll('.collection-card').forEach(card => {
+        if (card.dataset.id === id) {
+            card.classList.add('selected');
+        } else {
+            card.classList.remove('selected');
+        }
+    });
+}
+
 async function startGame() {
     const chkStrict = document.getElementById('chk-strict-c');
     state.strictC = chkStrict ? chkStrict.checked : true;
     localStorage.setItem('strictC', state.strictC);
 
-    const selCollection = document.getElementById('sel-collection');
-    const collectionId = selCollection ? selCollection.value : null;
+    const collectionId = document.getElementById('sel-collection-value').value;
     
     let selectedCollection = null;
     if (window.generatedCollections && collectionId) {
@@ -131,6 +171,7 @@ async function startGame() {
     }
 
     // Load problems - already shuffled and organized in python, so just map them
+    state.currentCollectionId = selectedCollection.id; // Store current ID
     state.problems = selectedCollection.problems.map((p, idx) => ({
         id: idx + 1,
         level: p.level,
@@ -306,6 +347,20 @@ ${problemsText}
         
         const correctCount = result.details.filter(d => d.isCorrect).length;
         result.score = `${correctCount}/${state.totalCount}`;
+
+        // Save Score
+        try {
+            if(state.currentCollectionId) {
+                const saveKey = `history_${state.currentCollectionId}`;
+                const saveData = {
+                    score: result.score,
+                    date: new Date().toISOString()
+                };
+                localStorage.setItem(saveKey, JSON.stringify(saveData));
+            }
+        } catch(e) {
+            console.error("Failed to save score:", e);
+        }
     } catch (error) {
         console.error("AI 채점 API 호출 실패:", error);
         result = {

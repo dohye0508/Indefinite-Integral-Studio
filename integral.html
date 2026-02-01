@@ -23,7 +23,7 @@
         <div id="loading-view" style="display:none;">
             <div class="landing-header">
                 <h1>Generating...</h1>
-                <p class="subtitle">AI가 적분 문제를 실시간으로 생성하고 있습니다.</p>
+                <p class="subtitle">적분 문제를 실시간으로 생성하고 있습니다.</p>
                 <div class="loader-spinner"></div>
             </div>
         </div>
@@ -39,9 +39,13 @@
                         <div class="selection-container">
                             <div class="sel-group" style="width: 100%;">
                                 <p class="section-title">문제집 선택 (Collection)</p>
-                                <select id="sel-collection" class="collection-select">
-                                    <!-- Options will be populated by logic.js -->
-                                </select>
+                                <!-- <select id="sel-collection" class="collection-select">
+                                    Options will be populated by logic.js
+                                </select> -->
+                                <div id="collection-grid" class="collection-grid">
+                                    <!-- Populated by logic.js -->
+                                </div>
+                                <input type="hidden" id="sel-collection-value" value="">
                                 <p style="font-size: 0.85em; color: var(--text-secondary);">
                                     * 각 컬렉션은 20문제로 구성되어 있습니다. (Lv1~5 혼합)
                                 </p>
