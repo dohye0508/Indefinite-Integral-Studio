@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculus AI Studio</title>
+    
+    <link rel="stylesheet" href="style.css?v=dark">
+
+    <script src="https://unpkg.com/mathlive"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <button id="theme-toggle-btn" class="theme-toggle-btn" onclick="toggleTheme()" title="테마 변경">
+        <svg id="theme-icon" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#9aa0a6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+        </svg>
+    </button>
+
+    <div class="container">
+        <div id="loading-view" style="display:none;">
+            <div class="landing-header">
+                <h1>Generating...</h1>
+                <p class="subtitle">AI가 고품질 적분 문제를 직접 출제하고 있습니다.</p>
+                <div class="loader-spinner"></div>
+            </div>
+        </div>
+
+            <div id="landing-view">
+                <div class="landing-main">
+                    <div class="landing-content">
+                        <div class="landing-header">
+                            <h1>Indefinite<br>Integral Studio</h1>
+                            <p class="subtitle">AI 기반 맞춤형 부정적분 트레이닝</p>
+                        </div>
+                        
+                        <div class="selection-container">
+                            <div class="sel-group" style="width: 100%;">
+                                <p class="section-title">문제집 선택 (Collection)</p>
+                                <select id="sel-collection" class="collection-select">
+                                    <!-- Options will be populated by logic.js -->
+                                </select>
+                                <p style="font-size: 0.85em; color: var(--text-secondary);">
+                                    * 각 컬렉션은 20문제로 구성되어 있습니다. (Lv1~5 혼합)
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="option-section">
+                            <div class="option-item">
+                                <label>
+                                    <input type="checkbox" id="chk-strict-c" checked> 적분상수(C) 엄격 채점
+                                </label>
+                            </div>
+                        </div>
+
+                        <button class="start-btn" onclick="startGame()">Get Started</button>
+                    </div>
+
+                    <div class="hero-visual">
+                        <div class="math-card math-card-1">$$\int x^n dx = \frac{x^{n+1}}{n+1} + C$$</div>
+                        <div class="math-card math-card-2">$$\int e^x dx = e^x + C$$</div>
+                        <div class="math-card math-card-3">$$\int \frac{1}{x} dx = \ln|x| + C$$</div>
+                        <div class="floating-symbol symbol-1">∫</div>
+                        <div class="floating-symbol symbol-2">Σ</div>
+                        <div class="floating-symbol symbol-3">∞</div>
+                        <div class="floating-symbol symbol-4">∂</div>
+                    </div>
+                </div>
+            </div>
+
+        <div id="app-view">
+            <div class="header">
+                <button class="btn-home" onclick="goHome()" title="메인으로">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </button>
+                <span class="brand">Gemini Math</span>
+                <div class="badges">
+                    <span id="level-badge" class="badge">Level 1</span>
+                    <span id="progress-badge" class="badge progress">1 / 20</span>
+                </div>
+            </div>
+
+            <!-- 문제 풀이 영역 -->
+            <div id="quiz-area">
+                <div id="problem-area"></div>
+
+                <math-field id="math-input" placeholder="정답 입력 (예: ln|x| + C)"></math-field>
+
+                <div class="action-bar">
+                    <button id="btn-prev" class="btn secondary hidden" onclick="prevProblem()">← Previous</button>
+                    <div style="flex-grow: 1;"></div>
+                    <button id="btn-next" class="btn primary" onclick="nextProblem()">Next →</button>
+                    <button id="btn-finish" class="btn success hidden" onclick="finishTest()">Finish Test</button>
+                </div>
+            </div>
+
+            <!-- 최종 결과 리포트 영역 -->
+            <div id="result-view" style="display:none;">
+                <!-- 중복 홈 버튼 제거됨 -->
+                <h2>Test Result</h2>
+                <div id="score-area"></div>
+                
+                <!-- 1. 간략 결과 (항상 보임) -->
+                <div id="simple-result-list"></div>
+
+                <div id="analysis-area"></div>
+
+                <div class="detail-control">
+                    <button id="btn-toggle-detail" class="btn secondary" onclick="toggleDetails()">자세히 보기 (View Details)</button>
+                </div>
+
+                <div id="detail-list">
+                    <!-- 상세 내용은 JS로 주입 -->
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <button class="btn primary" onclick="location.reload()">Restart</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            ISHS 32nd 이도혜
+        </div>
+    </div>
+
+    <!-- 캐시 방지를 위해 버전 파라미터 추가 -->
+    <!-- 캐시 방지를 위해 버전 파라미터 추가 -->
+    <!-- 데이터 로더 및 문제 데이터 (CORS 회피용) -->
+    <!-- 데이터 로더 및 문제 데이터 (CORS 회피용) -->
+    <script src="problems/loader.js?v=4"></script>
+    <!-- Collection-based Data -->
+    <script src="problems/collections.js"></script>
+    
+    <script src="config.js?v=4"></script>
+    <script src="logic.js?v=8"></script>
+
+</body>
+</html>

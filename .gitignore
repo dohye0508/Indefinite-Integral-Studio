@@ -1,0 +1,20 @@
+config.js
+
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.spec
+*.exe
+!Generate Problems.exe
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Data files
+problems/levels.txt
+problems/collections.js
+
