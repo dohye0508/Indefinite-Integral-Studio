@@ -47,46 +47,54 @@ def parse_levels(filename):
     return levels
 
 def generate_collections(levels_data):
-    # Required distribution: Lv1:3, Lv2:3, Lv3:4, Lv4:5, Lv5:5
-    distribution = {1: 3, 2: 3, 3: 4, 4: 5, 5: 5}
+    # Requirement 1: Every collection must start with Level 1.
+    # Requirement 2: Use ALL problems (maximize coverage).
+    # Requirement 3: Target size ~20 (no hard limit).
     
-    # Shuffle all pools
-    for lv in levels_data:
-        random.shuffle(levels_data[lv])
-    
-    collections = []
-    collection_id = 1
-    
-    while True:
-        current_collection_problems = []
-        possible = True
+    # Calculate total problem count
+    total_problems = sum(len(p) for p in levels_data.values())
+    if total_problems == 0:
+        return []
         
-        # Try to fill a collection
-        for lv in range(1, 6):
-            count_needed = distribution[lv]
-            if len(levels_data[lv]) >= count_needed:
-                # Take problems from the pool
-                chunk = levels_data[lv][:count_needed]
-                current_collection_problems.extend([{**p, 'level': lv} for p in chunk])
-                # Remove from pool
-                levels_data[lv] = levels_data[lv][count_needed:]
-            else:
-                # Not enough data for this level to make a full set
-                possible = False
-                break
+    target_size = 20
+    # Calculate optimal number of collections (rounding to nearest integer)
+    num_collections = max(1, round(total_problems / target_size))
+    
+    # Ensure ensuring every collection gets at least one Level 1
+    # if we have fewer Lv1 problems than calculated collections, we must reduce collections
+    # to guarantee the rule "Every collection starts with Lv1".
+    num_lv1 = len(levels_data.get(1, []))
+    if num_lv1 < num_collections:
+        print(f"Warning: Not enough Lv1 problems ({num_lv1}) for {num_collections} collections. Adjusting count.")
+        num_collections = max(1, num_lv1)
         
-        if possible:
-            # Sort by level for the test
-            current_collection_problems.sort(key=lambda x: x['level'])
-            collections.append({
-                "id": f"col{collection_id}",
-                "name": f"Collection {collection_id}",
-                "problems": current_collection_problems
-            })
-            collection_id += 1
-        else:
-            break
+    print(f"Generating {num_collections} collections from {total_problems} problems (Avg: {total_problems/num_collections:.1f})")
+
+    buckets = [[] for _ in range(num_collections)]
+    
+    # Distribute problems level by level to ensure balanced difficulty
+    for lv in range(1, 6):
+        probs = levels_data.get(lv, [])
+        # Shuffle order within the level
+        random.shuffle(probs)
+        
+        # Distribute round-robin
+        for i, p in enumerate(probs):
+            bucket_idx = i % num_collections
+            buckets[bucket_idx].append({**p, 'level': lv})
             
+    # Finalize collections
+    collections = []
+    for i, bucket in enumerate(buckets):
+        # Sort by level to ensure Lv1 comes first, then increasing difficulty
+        bucket.sort(key=lambda x: x['level'])
+        
+        collections.append({
+            "id": f"col{i+1}",
+            "name": f"Collection {i+1}",
+            "problems": bucket
+        })
+        
     return collections
 
 def write_js(collections, filename):
