@@ -1,58 +1,45 @@
-# ISHS_Lab
-> **The Next-Generation Integrated Academic Platform**
-> *초개인화 학습 경험과 통합 개발 환경의 만남*
+# ISHS_Lab 🧪
+> **Integrated Academic Platform**
+> *수학, 언어, 공학을 아우르는 통합 학습 환경*
 
 ![Status](https://img.shields.io/badge/Status-Active-success) ![Version](https://img.shields.io/badge/Version-2.5.0_Integb-blue) ![License](https://img.shields.io/badge/License-MIT-lightgrey)
 
 ---
 
-## 프로젝트 비전
+## 🏛️ 프로젝트 개요
 
-**ISHS_Lab**은 단순한 학습 도구를 넘어선, 공학적 정밀함과 교육적 통찰이 결합된 **최첨단 통합 학술 플랫폼**입니다.
-본 프로젝트는 **"학습의 몰입(Flow)을 위한 완벽한 환경"**이라는 철학 하에 설계되었으며, 수학적 엄밀성, 언어적 확장성, 그리고 컴퓨터 공학적 실용성을 하나의 유려한 인터페이스 안에 담아냈습니다.
-
-사용자는 ISHS_Lab을 통해 미적분학의 심연을 탐구하고, 언어의 장벽을 넘어서며, 코드로 세상을 제어하는 경험을 하게 될 것입니다. 이 모든 과정은 **ISHS 32nd**의 장인 정신으로 빚어낸 **Deep Dark Mode** 시스템과 **Responsive UI/UX** 위에서 매끄럽게 동작합니다.
+**ISHS_Lab**은 사용자 경험(UX)과 학습 효율성에 초점을 맞춘 웹 기반 통합 학술 플랫폼입니다.
+**Integral Studio**를 시작으로 수학적 연산, 어휘 관리, 프로그래밍 실습 환경을 하나의 통합된 인터페이스로 제공하는 것을 목표로 합니다. 직관적인 UI 설계와 견고한 백엔드 로직을 통해 실질적인 학습 가치를 제공합니다.
 
 ---
 
-## 핵심 모듈
+## 💎 핵심 모듈
 
-ISHS_Lab은 세 가지의 강력한 독립 스튜디오로 구성되어 있으며, 현재 **Integral Studio**를 중심으로 운영되고 있습니다.
+현재 **Integral Studio**가 메인 서비스로 운영되고 있으며, 어휘 및 컴파일러 모듈이 순차적으로 통합될 예정입니다.
 
-### 1. Integral Studio (Indefinite Integral Training)
-> *알고리즘이 설계하는 무한의 적분 우주*
+### 1. 📐 Integral Studio (Indefinite Integral Training)
+**Python SymPy** 엔진 기반의 부정적분 문제 생성 및 검증 시스템입니다.
 
-Integral Studio는 본 플랫폼의 기원이자 핵심 엔진입니다. 정적인 문제 은행 방식을 탈피하여, 독자적 알고리즘과 **Python SymPy** 엔진이 실시간으로 결합되어 **무한대에 가까운 부정적분 문제**를 생성합니다.
+-   **Dynamic Problem Generation**: 사전에 정의된 문제 유형 내에서 계수와 구조를 동적으로 변형하여 매번 새로운 문제를 생성합니다.
+-   **Strict Grading Engine**: 부정적분의 필수 요소인 **적분상수(C)** 포함 여부를 엄격하게 검증하며, 로그 함수의 절대값 표기(`log|x|`) 등 정밀한 수식 채점을 수행합니다.
+-   **Step-by-Step Analysis**: 문제 풀이 요청 시, 백엔드 엔진이 해당 문제의 풀이 과정을 단계별로 생성하여 제공합니다.
+-   **MathJax Rendering**: LaTeX 기반의 고품질 수식 렌더링을 지원합니다.
 
--   **Dynamic Problem Generation (DPG)**: 단순 난수 생성이 아닌, 교육적 가치가 검증된 함수 구조 내에서 계수와 형태를 변형하여 매번 새로운 문제를 창조합니다.
--   **Strict Grading Engine**: `log|x| + C`와 같은 미세한 수학적 표기까지 잡아내는 초정밀 채점 로직을 탑재했습니다. 특히 **적분상수(C)** 누락 시 가차 없는 피드백을 제공하여 수학적 엄밀성을 훈련시킵니다.
--   **On-Demand Analysis**: 사용자가 해설을 요구하는 즉시, 시스템이 해당 문제만을 위한 맞춤형 단계별 풀이를 생성하여 렌더링합니다.
--   **MathJax Rendering**: 모든 수식은 출판물 수준의 LaTeX 타이포그래피로 렌더링되어 최상의 가독성을 보장합니다.
+### 2. 📝 Vocabulary Studio (Planned)
+효율적인 어휘 암기 및 관리를 위한 학습 도구입니다.
 
-### 2. Vocabulary Studio
-> *기억의 망각 곡선을 정복하다 (Coming Soon)*
+-   **Auto-TTS Integration**: 단어 및 예문 음성 합성 기능 제공 예정
+-   **Adaptive Learning**: 오답 데이터를 기반으로 한 개인화된 단어 노출 알고리즘 적용
 
-단순한 단어 암기를 넘어, 인지과학적 접근을 시도하는 어휘 관리 모듈입니다. 자동화된 오답 노트 시스템과 스마트 셔플 알고리즘을 통해 효율적인 암기 학습을 지원할 예정입니다.
+### 3. 💻 Compiler Studio (Planned)
+웹 브라우저 기반의 경량 C/C++ 통합 개발 환경(IDE)입니다.
 
-### 3. Compiler Studio
-> *브라우저, 그 이상의 개발 환경 (Coming Soon)*
-
-설치 없는 코딩, 언제 어디서나 가능한 알고리즘 트레이닝을 목표로 하는 웹 IDE입니다. C/C++ 코드를 브라우저에서 즉시 작성하고 실행할 수 있는 무설치 환경을 제공합니다.
-
----
-
-## 디자인 시스템
-
-ISHS_Lab의 인터페이스는 심미적 만족감과 기능적 효율성을 동시에 추구합니다.
-
--   **Deep Black Dark Mode**: OLED 디스플레이에 최적화된 `#0a0a0a` 베이스의 다크 모드는 눈의 피로를 최소화하고 콘텐츠의 몰입도를 극대화합니다.
--   **Responsive Fluid Layout**: 데스크탑 워크스테이션부터 태블릿, 모바일에 이르기까지, 단 하나의 픽셀도 낭비하지 않는 유동적 그리드 시스템이 적용되었습니다.
+-   **Web-Based Execution**: 별도의 로컬 환경 설정 없이 코드 작성 및 실행 가능
+-   **Standard Options**: GCC 표준 최적화 옵션(-O2 등) 지원 예정
 
 ---
 
-## 기술 스택
-
-본 프로젝트는 안정성과 최신 기술의 조화를 위해 다음과 같은 기술 스택으로 구축되었습니다.
+## 🛠 기술 스택
 
 | Layer | Technology | Description |
 | :--- | :--- | :--- |
@@ -63,27 +50,8 @@ ISHS_Lab의 인터페이스는 심미적 만족감과 기능적 효율성을 동
 
 ---
 
-## 설치 및 실행
+## 📜 라이선스
 
-ISHS_Lab을 로컬 환경에 배포하기 위한 절차입니다.
-
-### Prerequisites
-- PHP 7.4 이상이 구동되는 웹 서버 (Apache/Nginx)
-- Python 3.8 이상 (SymPy 라이브러리 필수)
-- `pip install sympy`
-
-### Installation
-1. 레포지토리를 웹 서버의 루트 디렉토리에 복제합니다.
-2. `integral.php` 및 기타 PHP 파일의 권한을 확인합니다.
-3. 웹 브라우저를 통해 `index.php`에 접속합니다.
-
----
-
-## 라이선스
-
-- **Developer**: Dohye Lee (ISHS 32nd)
+- **Developer**: Dohye Lee
 - **Copyright**: © 2026 ISHS_Lab. All Rights Reserved.
 - **License**: MIT License
-
----
-*Created with passion, driven by calculus.*
